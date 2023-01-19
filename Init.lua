@@ -51,7 +51,7 @@ local function GetExploit()
 end
 
 local function CreateWindow()
-    task.delay(.5, function()
+    task.delay(.8, function()
         local Universal = Window:CreateTab("Universal", 4483362458)
         
         Universal:CreateSection("AFKing")
