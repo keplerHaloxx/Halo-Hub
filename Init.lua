@@ -168,30 +168,30 @@ local function CreateWindow()
         end
 
         Universal:CreateButton({
-            Name = "🔂 One-Time Server Hop",
+            Name = "🔂 Server Hop",
             Callback = function()
                 ServerHop()
             end,
         })
 
-        Universal:CreateToggle({
-            Name = "🔁 Server Hop",
-            Info = "Automatically server hops after the interval.",
-            CurrentValue = false,
-            Flag = "Universal-ServerHop",
-            Callback = function(Value)	end,
-        })
+--         Universal:CreateToggle({
+--             Name = "🔁 Server Hop",
+--             Info = "Automatically server hops after the interval.",
+--             CurrentValue = false,
+--             Flag = "Universal-ServerHop",
+--             Callback = function(Value)	end,
+--         })
 
-        Universal:CreateSlider({
-            Name = "⏲ Server Hop Intervals",
-            Info = "Sets the interval in seconds for the Server Hop.",
-            Suffix = "",
-            Range = {5, 600},
-            Increment = 1,
-            CurrentValue = 5,
-            Flag = "Universal-ServerhopIntervals",
-            Callback = function(Value)	end,
-        })
+--         Universal:CreateSlider({
+--             Name = "⏲ Server Hop Intervals",
+--             Info = "Sets the interval in seconds for the Server Hop.",
+--             Suffix = "",
+--             Range = {5, 600},
+--             Increment = 1,
+--             CurrentValue = 5,
+--             Flag = "Universal-ServerhopIntervals",
+--             Callback = function(Value)	end,
+--         })
 
         task.spawn(function()
             while task.wait(Rayfield.Flags["Universal-ServerhopIntervals"].CurrentValue) do
