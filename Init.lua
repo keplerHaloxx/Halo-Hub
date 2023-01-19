@@ -95,27 +95,6 @@ local function CreateWindow()
             end,
         })
 
-        local queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
-        local avail
-        if queueteleport then
-            avail = ""
-        else
-            avail = " (UNSUPPORTED EXECUTOR!)"
-        end
-
-        Universal:CreateToggle({
-			Name = "📶 Auto Re-Execute" .. avail,
-			CurrentValue = false,
-			Flag = "Universal-AutoRe-Execute",
-			Callback = function(Value)
-				if Value then
-					if queueteleport then
-						queueteleport('loadstring(game:HttpGet("' .. exLink .. '"))()')
-					end
-				end
-			end,
-		})
-
         Universal:CreateSection("Safety")
 
         local GroupId = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Creator.CreatorTargetId
