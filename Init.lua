@@ -168,14 +168,6 @@ local function CreateWindow()
             end,
         })
 
-        task.spawn(function()
-            while task.wait(Rayfield.Flags["Universal-ServerhopIntervals"].CurrentValue) do
-                if Rayfield.Flags["Universal-ServerHop"].CurrentValue then
-                    ServerHop()
-                end
-            end
-        end)
-
         Universal:CreateSection("Other")
         Universal:CreateButton({
             Name = "🗑️ Destory UI",
