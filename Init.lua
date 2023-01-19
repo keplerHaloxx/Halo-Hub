@@ -220,6 +220,14 @@ local function CreateWindow()
                 end
             end
         end)
+
+        Universal:CreateSection("Other")
+        Universal:CreateButton({
+            Name = "🗑️ Destory UI",
+            Callback = function()
+                Rayfield:Destroy()
+            end,
+        })
         
         Rayfield:LoadConfiguration()
     end)
