@@ -2,7 +2,7 @@ local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/UI-I
 local Player = game:GetService("Players").LocalPlayer
 
 local Window = Rayfield:CreateWindow({
-	Name = "Halo Hub",
+	Name = "🪴 Halo Hub",
 	LoadingTitle = "🎮 " .. game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name .. " 🎮",
 	LoadingSubtitle = "By Haloxx",
 	ConfigurationSaving = {
@@ -16,7 +16,7 @@ repeat task.wait() until Window
 
 local function Notify(Message, Duration, Buttons)
 	Rayfield:Notify({
-		Title = "🪴 Halo Hub",
+		Title = "Halo Hub",
 		Content = Message,
 		Duration = Duration or 5,
 		Image = 4483362458,
