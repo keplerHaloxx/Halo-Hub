@@ -206,6 +206,7 @@ local function CreateWindow()
         Universal:CreateSlider({
             Name = "⏲ Server Hop Intervals",
             Info = "Sets the interval in seconds for the Server Hop.",
+            Suffix = "",
             Range = {5, 600},
             Increment = 1,
             CurrentValue = 5,
