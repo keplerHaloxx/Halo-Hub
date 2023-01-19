@@ -24,6 +24,32 @@ local function Notify(Message, Duration, Buttons)
 	})
 end
 
+local exLink
+local function SetReExecuteLink(link)
+    exLink = tostring(link)
+end
+
+
+local function GetExploit()
+	return
+		(secure_load and "Sentinel") or
+		(is_sirhurt_closure and "Sirhurt") or
+		(pebc_execute and "ProtoSmasher") or
+		(KRNL_LOADED and "Krnl") or
+		(WrapGlobal and "WeAreDevs") or
+		(isvm and "Proxo") or
+		(shadow_env and "Shadow") or
+		(jit and "EasyExploits") or
+		(getscriptenvs and "Calamari") or
+		(unit and not syn and "Unit") or
+		(OXYGEN_LOADED and "Oxygen U") or
+		(IsElectron and "Electron") or
+		(IS_COCO_LOADED and "Coco") or
+		(IS_VIVA_LOADED and "Viva") or
+		(syn and is_synapse_function and not is_sirhurt_closure and not pebc_execute and "Synapse") or
+		("Other")
+end
+
 local function CreateWindow()
     task.delay(1.5, function()
         local Universal = Window:CreateTab("Universal", 4483362458)
@@ -32,7 +58,7 @@ local function CreateWindow()
 
         Universal:CreateToggle({
             Name = "🚫 Anti-AFK",
-            Info = "Prevents Roblox's anti-afk from kicking you. (Doesn't work for games with their own anti-afk)",
+            Info = "Prevents Roblox's anti-afk from kicking you.\n(Doesn't work for games with their own anti-afk)",
             CurrentValue = false,
             Flag = "Universal-AntiAFK",
             Callback = function(Value)	end,
@@ -69,6 +95,27 @@ local function CreateWindow()
             end,
         })
 
+        local queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
+        local avail
+        if queueteleport then
+            avail = ""
+        else
+            avail = " (UNSUPPORTED EXECUTOR!)"
+        end
+
+        Universal:CreateToggle({
+			Name = "📶 Auto Re-Execute" .. avail,
+			CurrentValue = false,
+			Flag = "Universal-AutoRe-Execute",
+			Callback = function(Value)
+				if Value then
+					if queueteleport then
+						queueteleport('loadstring(game:HttpGet("' .. exLink .. '"))()')
+					end
+				end
+			end,
+		})
+
         Universal:CreateSection("Safety")
 
         local GroupId = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Creator.CreatorTargetId
@@ -102,6 +149,16 @@ local function CreateWindow()
                 end)
             end
         end)
+
+        Universal:CreateSection("Rejoining")
+
+        Universal:CreateButton({
+            Name = "🔃 Rejoin",
+            Info = "Rejoins your current server",
+            Callback = function()
+                game:GetService("TeleportService"):Teleport(game.PlaceId, Player)
+            end,
+        })
 
         Universal:CreateSection("Server Hopping")
 
@@ -168,4 +225,7 @@ local function CreateWindow()
     end)
 end
 
-return Rayfield, Window, CreateWindow, Notify
+CreateWindow()
+
+return Rayfield, Window, CreateWindow, Notify, GetExploit, SetReExecuteLink
+-- local Rayfield, Window, CreateWindow, Notify, GetExploit, SetReExecuteLink = loadstring(game:HttpGet("https://raw.githubusercontent.com/xvhHaloxx/Halo-Hub/main/Init.lua"))()
