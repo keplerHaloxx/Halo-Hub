@@ -1,5 +1,5 @@
 -- * / Library Init \\--
-local Rayfield, Window, CreateWindow, Notify, GetExploit, SetReExecuteLink = loadstring(game:HttpGet("https://raw.githubusercontent.com/xvhHaloxx/Halo-Hub/main/Init.lua"))()
+local Rayfield, Window, CreateWindow, Notify, GetExploit = loadstring(game:HttpGet("https://raw.githubusercontent.com/xvhHaloxx/Halo-Hub/main/Init.lua"))()
 -- https://raw.githubusercontent.com/xvhHaloxx/Halo-Hub/main/Init.lua
 
 -- ! // Destory Old Library \\--
@@ -11,11 +11,10 @@ local Rayfield, Window, CreateWindow, Notify, GetExploit, SetReExecuteLink = loa
 -- 	end
 -- end
 
-SetReExecuteLink("https://raw.githubusercontent.com/xvhHaloxx/Halo-Hub/main/Games/Tower%20Merge%20Simulator.lua")
-
 -- * // Tabs \\--
 local Tabs = {
-    ["Main"] = Window:CreateTab("Main", 4483362458)
+    ["Main"] = Window:CreateTab("Main", 4483362458),
+	["Upgrades"] = Window:CreateTab("Upgrades", 4483362458),
 }
 
 local Funcs = {}
@@ -69,11 +68,28 @@ Funcs.MergeTower = function()
 	end
 end
 
+Funcs.Upgrade = function(val)	
+	if val == "Spawn Speed" then
+		ReplicatedStorage.Assets.Events.RemoteFunction:InvokeServer("upgrade", "spawn_speed")
+	elseif val == "Spawn Level" then
+		ReplicatedStorage.Assets.Events.RemoteFunction:InvokeServer("upgrade", "spawn_level")
+	elseif val == "Shoot Speed" then
+		ReplicatedStorage.Assets.Events.RemoteFunction:InvokeServer("upgrade", "shoot_speed")
+	elseif val == "Click Power" then
+		ReplicatedStorage.Assets.Events.RemoteFunction:InvokeServer("upgrade", "click_power")
+	end
+end
+
 
 -- // Genv's \\--
 getgenv().AutoClick = false
 getgenv().AutoObby = false
 getgenv().AutoMerge = false
+
+getgenv().AutoUpgrade_SpawnSpeed = false
+getgenv().AutoUpgrade_SpawnLevel = false
+getgenv().AutoUpgrade_ShootSpeed = false
+getgenv().AutoUpgrade_ClickPower = false
 
 -- * // ( Main ) Tab \\--
 Tabs["Main"]:CreateParagraph({Title = "READ ME", Content = "If a keybind is set to Backspace then it's turned off."})
@@ -146,8 +162,92 @@ task.spawn(function()
 	end
 end)
 
+-- ! Auto Upgrade
+
+local function AddStuff(Tab, DisplayName, Name, Genv, Callback)
+	local Toggle = Tabs[Tab]:CreateToggle({
+		Name = tostring(DisplayName),
+		CurrentValue = getgenv()[Genv],
+		Flag = tostring(Name .. "Toggle"),
+		Callback = function(Value)
+			getgenv()[Genv] = Value
+		end,
+	})
+	
+	local Bind = Tabs[Tab]:CreateKeybind({
+		Name = DisplayName .. " Bind",
+		CurrentKeybind = "Backspace",
+		HoldToInteract = false,
+		Flag = tostring(Name .. "Bind"),
+		Callback = function()end,
+	})
+	
+	Bind.Callback = function()
+		if Bind.CurrentKeybind ~= "Backspace" then
+			getgenv()[Genv] = not getgenv()[Genv]
+			Toggle:Set(getgenv()[Genv])
+		end
+	end
+	
+	task.spawn(function()
+		while true and task.wait() do
+			if getgenv()[Genv] == true then
+				Callback()
+			end
+		end
+	end)
+
+	return Toggle, Bind
+end
+
+-- ? Spawn Speed
+Tabs["Upgrades"]:CreateSection("Spawn Speed")
+AddStuff("Upgrades", "🕑 Auto Upgrade SpawnSpeed", "AutoUpgradeSpawnSpeed", "AutoUpgrade_SpawnSpeed", function()
+	Funcs.Upgrade("Spawn Speed")
+end)
+
+-- ? Spawn Level
+Tabs["Upgrades"]:CreateSection("Spawn Level")
+AddStuff("Upgrades", "🕑 Auto Upgrade SpawnLevel", "AutoUpgradeSpawnLevel", "AutoUpgrade_SpawnLevel", function()
+	Funcs.Upgrade("Spawn Level")
+end)
+
+-- ? Shoot Speed
+Tabs["Upgrades"]:CreateSection("Shoot Speed")
+AddStuff("Upgrades", "🕑 Auto Upgrade ShootSpeed", "AutoUpgradeShootSpeed", "AutoUpgrade_ShootSpeed", function()
+	Funcs.Upgrade("Shoot Speed")
+end)
+
+-- ? Click Power
+Tabs["Upgrades"]:CreateSection("Click Power")
+AddStuff("Upgrades", "🕑 Auto Upgrade ClickPower", "AutoUpgradeClickPower", "AutoUpgrade_ClickPower", function()
+	Funcs.Upgrade("Click Power")
+end)
+
+
 -- ! Auto Obby
 Tabs["Main"]:CreateSection("Auto Complete Obby")
+
+local CooldownLabel = Tabs["Main"]:CreateLabel("Cooldown: Ready!")
+task.spawn(function()
+	while true and task.wait() do
+		print(#Workspace.ObbyWalls.Part.SurfaceGui.TextLabel.Text:split(" "))
+		if string.match(Workspace.ObbyWalls.Part.SurfaceGui.TextLabel.Text, "Unlocks in") then
+			if Workspace.ObbyWalls.Part.SurfaceGui.TextLabel.Text:split(" ")[4] ~= nil and Workspace.ObbyWalls.Part.SurfaceGui.Enabled == true then
+				CooldownLabel:Set("Cooldown: " .. tostring(Workspace.ObbyWalls.Part.SurfaceGui.TextLabel.Text:split(" ")[3]) .. " " .. tostring(Workspace.ObbyWalls.Part.SurfaceGui.TextLabel.Text:split(" ")[4]))
+			elseif Workspace.ObbyWalls.Part.SurfaceGui.TextLabel.Text:split(" ")[4] == nil and Workspace.ObbyWalls.Part.SurfaceGui.Enabled == true then
+				CooldownLabel:Set("Cooldown: " .. tostring(Workspace.ObbyWalls.Part.SurfaceGui.TextLabel.Text:split(" ")[3]))
+			elseif Workspace.ObbyWalls.Part.SurfaceGui.Enabled == false then
+				CooldownLabel:Set("Cooldown: Ready!")
+			else
+				CooldownLabel:Set("Cooldown: Unknown")
+			end
+		else
+			CooldownLabel:Set("Cooldown: Ready!")
+		end
+	end
+end)
+
 local AutoObbyToggle = Tabs["Main"]:CreateToggle({
 	Name = "🕑 Auto Obby",
 	CurrentValue = getgenv().AutoObby,
@@ -173,7 +273,7 @@ AutoObbyBind.Callback = function()
 end
 
 task.spawn(function()
-	while true and task.wait(5) do
+	while true and task.wait(1) do
 		if getgenv().AutoObby == true then
 			local Primary = Player.Character and Player.Character.PrimaryPart
 			if Primary then
@@ -183,5 +283,12 @@ task.spawn(function()
 		end
 	end
 end)
+
+-- local ohString1 = "Get Stats"
+-- local ohInstance2 = game:GetService("Players").LocalPlayer
+
+-- for i,v in pairs(game:GetService("ReplicatedStorage").Assets.Events.RemoteFunction:InvokeServer(ohString1, ohInstance2)) do
+-- 	print(i,v)
+-- end
 
 Rayfield:LoadConfiguration()
