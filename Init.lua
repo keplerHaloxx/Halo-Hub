@@ -208,8 +208,6 @@ local function CreateWindow()
                 Rayfield:Destroy()
             end,
         })
-        
-        Rayfield:LoadConfiguration()
     end)
 end
 
