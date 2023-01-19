@@ -1,5 +1,5 @@
 -- * / Library Init \\--
-local Rayfield, Window, CreateWindow, Notify, GetExploit, SetReExecuteLink = loadstring(game:HttpGet("https://pastebin.com/raw/Gy60XQyf"))()
+local Rayfield, Window, CreateWindow, Notify, GetExploit, SetReExecuteLink = loadstring(game:HttpGet("https://raw.githubusercontent.com/xvhHaloxx/Halo-Hub/main/Init.lua"))()
 -- https://raw.githubusercontent.com/xvhHaloxx/Halo-Hub/main/Init.lua
 
 -- ! // Destory Old Library \\--
