@@ -2,7 +2,7 @@ local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/UI-I
 local Player = game:GetService("Players").LocalPlayer
 
 local Window = Rayfield:CreateWindow({
-	Name = "🪴 Halo Hub",
+	Name = "🏠 Halo Hub",
 	LoadingTitle = "🎮 " .. game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name .. " 🎮",
 	LoadingSubtitle = "By Haloxx",
 	ConfigurationSaving = {
