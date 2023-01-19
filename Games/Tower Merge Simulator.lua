@@ -11,7 +11,7 @@ local Rayfield, Window, CreateWindow, Notify, GetExploit, SetReExecuteLink = loa
 -- 	end
 -- end
 
-SetReExecuteLink("https://raw.githubusercontent.com/xvhHaloxx/Halo-Hub/main/Games/Tower%20Merge%20Simulator")
+SetReExecuteLink("https://raw.githubusercontent.com/xvhHaloxx/Halo-Hub/main/Games/Tower%20Merge%20Simulator.lua")
 
 -- * // Tabs \\--
 local Tabs = {
