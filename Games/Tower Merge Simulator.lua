@@ -33,9 +33,9 @@ Funcs.GetPlot = function()
 end
 
 if Funcs.GetPlot() == nil then
-	repeat task.wait(1)
-		Notify("Waiting For Plot...", 2.5, {Ok = {Name = "Ok", Callback = function()end}})
-	until Funcs.GetPlot() ~= nil
+	Notify("Waiting For Plot...", 2.5, {Ok = {Name = "Ok", Callback = function()end}})
+	repeat task.wait(1) until Funcs.GetPlot() ~= nil
+	Notify("Plot Found!", 2.5, {Ok = {Name = "Ok", Callback = function()end}})
 end
 
 
