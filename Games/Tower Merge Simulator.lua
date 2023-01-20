@@ -15,6 +15,8 @@ local Rayfield, Window, CreateWindow, Notify, GetExploit = loadstring(game:HttpG
 local Tabs = {
     ["Main"] = Window:CreateTab("Main", 4483362458),
 	["Upgrades"] = Window:CreateTab("Upgrades", 4483362458),
+	["Eggs"] = Window:CreateTab("Eggs", 4483362458),
+	["Rebirths"] = Window:CreateTab("Rebirths", 4483362458),
 }
 
 local Funcs = {}
@@ -81,15 +83,27 @@ Funcs.Upgrade = function(val)
 end
 
 
--- // Genv's \\--
+-- * // Genv's \\--
 getgenv().AutoClick = false
 getgenv().AutoObby = false
 getgenv().AutoMerge = false
+getgenv().AutoRebirth = false
 
 getgenv().AutoUpgrade_SpawnSpeed = false
 getgenv().AutoUpgrade_SpawnLevel = false
 getgenv().AutoUpgrade_ShootSpeed = false
 getgenv().AutoUpgrade_ClickPower = false
+
+getgenv().AutoBuyEgg1 = false
+getgenv().AutoBuyEgg2 = false
+getgenv().AutoBuyEgg3 = false
+getgenv().AutoBuyVoidEgg = false
+
+getgenv().GemsAutoMerge = false
+getgenv().GemsCashMulti = false
+getgenv().GemsTowerDamage = false
+getgenv().GemsMulti = false
+
 
 -- * // ( Main ) Tab \\--
 Tabs["Main"]:CreateParagraph({Title = "READ ME", Content = "If a keybind is set to Backspace then it's turned off."})
@@ -162,68 +176,6 @@ task.spawn(function()
 	end
 end)
 
--- ! Auto Upgrade
-
-local function AddStuff(Tab, DisplayName, Name, Genv, Callback)
-	local Toggle = Tabs[Tab]:CreateToggle({
-		Name = tostring(DisplayName),
-		CurrentValue = getgenv()[Genv],
-		Flag = tostring(Name .. "Toggle"),
-		Callback = function(Value)
-			getgenv()[Genv] = Value
-		end,
-	})
-	
-	local Bind = Tabs[Tab]:CreateKeybind({
-		Name = DisplayName .. " Bind",
-		CurrentKeybind = "Backspace",
-		HoldToInteract = false,
-		Flag = tostring(Name .. "Bind"),
-		Callback = function()end,
-	})
-	
-	Bind.Callback = function()
-		if Bind.CurrentKeybind ~= "Backspace" then
-			getgenv()[Genv] = not getgenv()[Genv]
-			Toggle:Set(getgenv()[Genv])
-		end
-	end
-	
-	task.spawn(function()
-		while true and task.wait() do
-			if getgenv()[Genv] == true then
-				Callback()
-			end
-		end
-	end)
-
-	return Toggle, Bind
-end
-
--- ? Spawn Speed
-Tabs["Upgrades"]:CreateSection("Spawn Speed")
-AddStuff("Upgrades", "🕑 Auto Upgrade SpawnSpeed", "AutoUpgradeSpawnSpeed", "AutoUpgrade_SpawnSpeed", function()
-	Funcs.Upgrade("Spawn Speed")
-end)
-
--- ? Spawn Level
-Tabs["Upgrades"]:CreateSection("Spawn Level")
-AddStuff("Upgrades", "🕑 Auto Upgrade SpawnLevel", "AutoUpgradeSpawnLevel", "AutoUpgrade_SpawnLevel", function()
-	Funcs.Upgrade("Spawn Level")
-end)
-
--- ? Shoot Speed
-Tabs["Upgrades"]:CreateSection("Shoot Speed")
-AddStuff("Upgrades", "🕑 Auto Upgrade ShootSpeed", "AutoUpgradeShootSpeed", "AutoUpgrade_ShootSpeed", function()
-	Funcs.Upgrade("Shoot Speed")
-end)
-
--- ? Click Power
-Tabs["Upgrades"]:CreateSection("Click Power")
-AddStuff("Upgrades", "🕑 Auto Upgrade ClickPower", "AutoUpgradeClickPower", "AutoUpgrade_ClickPower", function()
-	Funcs.Upgrade("Click Power")
-end)
-
 
 -- ! Auto Obby
 Tabs["Main"]:CreateSection("Auto Complete Obby")
@@ -231,7 +183,6 @@ Tabs["Main"]:CreateSection("Auto Complete Obby")
 local CooldownLabel = Tabs["Main"]:CreateLabel("Cooldown: Ready!")
 task.spawn(function()
 	while true and task.wait() do
-		print(#Workspace.ObbyWalls.Part.SurfaceGui.TextLabel.Text:split(" "))
 		if string.match(Workspace.ObbyWalls.Part.SurfaceGui.TextLabel.Text, "Unlocks in") then
 			if Workspace.ObbyWalls.Part.SurfaceGui.TextLabel.Text:split(" ")[4] ~= nil and Workspace.ObbyWalls.Part.SurfaceGui.Enabled == true then
 				CooldownLabel:Set("Cooldown: " .. tostring(Workspace.ObbyWalls.Part.SurfaceGui.TextLabel.Text:split(" ")[3]) .. " " .. tostring(Workspace.ObbyWalls.Part.SurfaceGui.TextLabel.Text:split(" ")[4]))
@@ -284,11 +235,176 @@ task.spawn(function()
 	end
 end)
 
--- local ohString1 = "Get Stats"
--- local ohInstance2 = game:GetService("Players").LocalPlayer
+-- * // ( Upgrades ) Tab \\--
 
--- for i,v in pairs(game:GetService("ReplicatedStorage").Assets.Events.RemoteFunction:InvokeServer(ohString1, ohInstance2)) do
--- 	print(i,v)
--- end
+local function AddStuff(Tab, DisplayName, Name, Genv, CreateButton, ButtonName, Callback)
+
+	if CreateButton == true then
+		Tabs[Tab]:CreateButton({
+			Name = ButtonName or DisplayName,
+			Interact = "",
+			Callback = function()
+				Callback()
+			end,
+		})
+	end
+	local Toggle = Tabs[Tab]:CreateToggle({
+		Name = tostring(DisplayName),
+		CurrentValue = getgenv()[Genv],
+		Flag = tostring(Name .. "Toggle"),
+		Callback = function(Value)
+			getgenv()[Genv] = Value
+		end,
+	})
+	
+	local Bind = Tabs[Tab]:CreateKeybind({
+		Name = DisplayName .. " Bind",
+		CurrentKeybind = "Backspace",
+		HoldToInteract = false,
+		Flag = tostring(Name .. "Bind"),
+		Callback = function()end,
+	})
+	
+	Bind.Callback = function()
+		if Bind.CurrentKeybind ~= "Backspace" then
+			getgenv()[Genv] = not getgenv()[Genv]
+			Toggle:Set(getgenv()[Genv])
+		end
+	end
+	
+	task.spawn(function()
+		while true and task.wait() do
+			if getgenv()[Genv] == true then
+				Callback()
+			end
+		end
+	end)
+
+	return Toggle, Bind
+end
+
+-- ? Spawn Speed
+Tabs["Upgrades"]:CreateSection("Spawn Speed")
+
+local SpawnSpeedAmount = Tabs["Upgrades"]:CreateLabel("Amount Needed: ???")
+AddStuff("Upgrades", "🕑 Auto Upgrade SpawnSpeed", "AutoUpgradeSpawnSpeed", "AutoUpgrade_SpawnSpeed", true, "Upgrade SpawnSpeed", function()
+	Funcs.Upgrade("Spawn Speed")
+end)
+
+-- ? Spawn Level
+Tabs["Upgrades"]:CreateSection("Spawn Level")
+
+local SpawnLevelAmount = Tabs["Upgrades"]:CreateLabel("Amount Needed: ???")
+AddStuff("Upgrades", "🕑 Auto Upgrade SpawnLevel", "AutoUpgradeSpawnLevel", "AutoUpgrade_SpawnLevel", true, "Upgrade SpawnLevel", function()
+	Funcs.Upgrade("Spawn Level")
+end)
+
+-- ? Shoot Speed
+Tabs["Upgrades"]:CreateSection("Shoot Speed")
+
+local ShootSpeedAmount = Tabs["Upgrades"]:CreateLabel("Amount Needed: ???")
+AddStuff("Upgrades", "🕑 Auto Upgrade ShootSpeed", "AutoUpgradeShootSpeed", "AutoUpgrade_ShootSpeed", true, "Upgrade ShootSpeed", function()
+	Funcs.Upgrade("Shoot Speed")
+end)
+
+-- ? Click Power
+Tabs["Upgrades"]:CreateSection("Click Power")
+
+local ClickPowerAmount = Tabs["Upgrades"]:CreateLabel("Amount Needed: ???")
+AddStuff("Upgrades", "🕑 Auto Upgrade ClickPower", "AutoUpgradeClickPower", "AutoUpgrade_ClickPower", true, "Upgrade ClickPower", function()
+	Funcs.Upgrade("Click Power")
+end)
+
+-- ? Cash Labels
+task.spawn(function()
+	local CashPlace = Plot.CashBoard.SurfaceGui.Frame
+
+	while true and task.wait() do
+		SpawnSpeedAmount:Set("Amount Needed: " .. CashPlace.spawn_speed.Upgrade.Cost.Cost.Text)
+		SpawnLevelAmount:Set("Amount Needed: " .. CashPlace.spawn_level.Upgrade.Cost.Cost.Text)
+		ShootSpeedAmount:Set("Amount Needed: " .. CashPlace.shoot_speed.Upgrade.Cost.Cost.Text)
+		ClickPowerAmount:Set("Amount Needed: " .. CashPlace.click_power.Upgrade.Cost.Cost.Text)
+	end
+end)
+
+
+-- * // ( Eggs ) Tab \\--
+
+-- ? Get Eggs Amount
+local eggsAmount = {}
+for i,v in pairs (game:GetService("ReplicatedStorage").Game.Eggs:GetChildren()) do
+	local mods = require(v:FindFirstChildOfClass("ModuleScript"))
+	local formatter = require(game:GetService("ReplicatedStorage").Assets.Modules.Functions.Format)
+
+	if mods.currency == "Cash" then
+		eggsAmount[v.Name] = formatter.Short(mods.cost)
+	end
+end
+
+-- ? Egg 1
+Tabs["Eggs"]:CreateSection("Egg 1")
+
+Tabs["Eggs"]:CreateLabel("Amount Needed: " .. eggsAmount["Egg1"])
+AddStuff("Eggs", "🕑 Auto Buy Egg1", "AutoBuyEgg1", "AutoBuyEgg1", true, "Buy Egg1", function()
+	ReplicatedStorage.Assets.Events.RemoteFunction:InvokeServer("purchase egg", "Egg1", false)
+end)
+
+-- ? Egg 2
+Tabs["Eggs"]:CreateSection("Egg 2")
+
+Tabs["Eggs"]:CreateLabel("Amount Needed: " .. eggsAmount["Egg2"])
+AddStuff("Eggs", "🕑 Auto Buy Egg2", "AutoBuyEgg2", "AutoBuyEgg2", true, "Single Buy", function()
+	ReplicatedStorage.Assets.Events.RemoteFunction:InvokeServer("purchase egg", "Egg2", false)
+end)
+
+
+-- * // ( Rebirths ) Tab \\--
+
+local playerStats = {}
+playerStats["Cash"] = ReplicatedStorage.Assets.Events.RemoteFunction:InvokeServer("Get Stats", Player)["Cash"]
+playerStats["Rebirths"] = ReplicatedStorage.Assets.Events.RemoteFunction:InvokeServer("Get Stats", Player)["Rebirth"]
+playerStats["Gems"] = ReplicatedStorage.Assets.Events.RemoteFunction:InvokeServer("Get Stats", Player)["Gems"]
+
+
+Tabs["Rebirths"]:CreateSection("Rebirthing")
+Tabs["Rebirths"]:CreateLabel("You have " .. playerStats["Rebirths"] .. " rebirths")
+AddStuff("Rebirths", "🕑 Auto Rebirth", "AutoRebirth", "AutoRebirth", true, "Single Rebirth", function()
+	ReplicatedStorage.Assets.Events.RemoteFunction:InvokeServer("rebirth")
+end)
+
+Tabs["Rebirths"]:CreateSection("Gem Shop")
+Tabs["Rebirths"]:CreateLabel("You have " .. playerStats["Gems"] .. " gems")
+
+-- ? Gems | Auto Merge
+Tabs["Rebirths"]:CreateSection("Auto Merge")
+Tabs["Rebirths"]:CreateLabel("Cost: " .. Plot.RebirthBoard.SurfaceGui.Frame.GemShop.Content.auto_merge.Cost.Cost.Cost.Text .. " gems")
+AddStuff("Rebirths", "🕑 Auto Buy (Gems) Auto Merge", "GemsAutoMerge", "GemsAutoMerge", true, "Single Buy", function()
+	ReplicatedStorage.Assets.Events.RemoteFunction:InvokeServer("rebirth")
+end)
+
+-- ? Gems | Cash Multiplier
+Tabs["Rebirths"]:CreateSection("Cash Multiplier")
+Tabs["Rebirths"]:CreateLabel("Cost: " .. Plot.RebirthBoard.SurfaceGui.Frame.GemShop.Content.cash_multiplier.Cost.Cost.Cost.Text .. " gems")
+AddStuff("Rebirths", "🕑 Auto Buy (Gems) Cash Multiplier", "GemsCashMulti", "GemsCashMulti", true, "Single Buy", function()
+	ReplicatedStorage.Assets.Events.RemoteFunction:InvokeServer("rebirth")
+end)
+
+-- ? Gems | Tower Damage
+Tabs["Rebirths"]:CreateSection("Tower Damage")
+Tabs["Rebirths"]:CreateLabel("Cost: " .. Plot.RebirthBoard.SurfaceGui.Frame.GemShop.Content.tower_damage.Cost.Cost.Cost.Text .. " gems")
+AddStuff("Rebirths", "🕑 Auto Buy (Gems) Tower Damage", "GemsTowerDamage", "GemsTowerDamage", true, "Single Buy", function()
+	ReplicatedStorage.Assets.Events.RemoteFunction:InvokeServer("rebirth")
+end)
+
+-- ? Gems | Gem Multiplier
+Tabs["Rebirths"]:CreateSection("Gem Multiplier")
+Tabs["Rebirths"]:CreateLabel("Cost: " .. Plot.RebirthBoard.SurfaceGui.Frame.GemShop.Content.gem_multiplier.Cost.Cost.Cost.Text .. " gems")
+AddStuff("Rebirths", "🕑 Auto Buy (Gems) Gem Multiplier", "GemsMulti", "GemsMulti", true, "Single Buy", function()
+	ReplicatedStorage.Assets.Events.RemoteFunction:InvokeServer("rebirth")
+end)
+
+
+
+
 
 Rayfield:LoadConfiguration()
