@@ -180,5 +180,5 @@ end
 
 CreateWindow()
 
-return Rayfield, Window, CreateWindow, Notify, GetExploit, SetReExecuteLink
--- local Rayfield, Window, CreateWindow, Notify, GetExploit, SetReExecuteLink = loadstring(game:HttpGet("https://raw.githubusercontent.com/xvhHaloxx/Halo-Hub/main/Init.lua"))()
+return Rayfield, Window, CreateWindow, Notify, GetExploit
+-- local Rayfield, Window, CreateWindow, Notify, GetExploit = loadstring(game:HttpGet("https://raw.githubusercontent.com/xvhHaloxx/Halo-Hub/main/Init.lua"))()
